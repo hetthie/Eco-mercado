@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Mercado - Estado del Producto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+            border-radius: 30px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .leaf-icon {
+            width: 28px;
+            height: 28px;
+            background: #4ade80;
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-45deg);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .title {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        .product-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .product-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .product-date {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 25px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+        }
+
+        .status-aptos {
+            background: #22c55e;
+            color: white;
+        }
+
+        .status-maduracion {
+            background: #fbbf24;
+            color: #1a1a1a;
+        }
+
+        .status-fuera {
+            background: #ef4444;
+            color: white;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.9;
+            box-shadow: 0 0 6px currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .status-description {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+        }
+
+        .process-btn {
+            background: #4ade80;
+            color: #1a1a1a;
+        }
+
+        .process-btn:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 222, 128, 0.4);
+        }
+
+        .back-btn {
+            background: #94a3b8;
+            color: white;
+        }
+
+        .back-btn:hover {
+            background: #64748b;
+            transform: translateY(-2px);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Estados específicos para demostración */
+        .info-card {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .info-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .recommendation-badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="leaf-icon"></div>
+            <div class="logo-text">ECO MERCADO</div>
+        </div>
+        
+        <h1 class="title">Estado del Producto</h1>
+        
+        <div class="product-card">
+            <span class="product-emoji" id="productEmoji">🍎</span>
+            <div class="product-name" id="productName">Manzana</div>
+            <div class="product-date" id="productDate">Fecha de compra: 15/11/2025</div>
+            
+            <div id="statusContainer">
+                <!-- El estado se inyectará aquí dinámicamente -->
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">Análisis del Producto</div>
+                <div class="info-text" id="analysisText">
+                    Este producto se encuentra en condiciones óptimas para su comercialización. 
+                    La frescura y calidad cumplen con los estándares requeridos.
+                </div>
+                <span class="recommendation-badge" id="recommendation">✓ Apto para exhibición</span>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button class="action-btn process-btn" id="processBtn" onclick="processProduct()">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                </svg>
+                Tratar/Procesar Producto
+            </button>
+            
+            <button class="action-btn back-btn" onclick="window.location.href='fecha-compra.html'">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                Volver
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo de productos con sus estados
+        const productStates = {
+            'aptos': {
+                status: 'Aptos para la venta',
+                class: 'status-aptos',
+                analysis: 'Este producto se encuentra en condiciones óptimas para su comercialización. La frescura y calidad cumplen con los estándares requeridos.',
+                recommendation: '✓ Apto para exhibición'
+            },
+            'maduracion': {
+                status: 'Maduración avanzada',
+                class: 'status-maduracion',
+                analysis: 'El producto presenta signos de maduración avanzada. Se recomienda venta inmediata o procesamiento para evitar pérdidas. Considere descuentos o uso en preparaciones.',
+                recommendation: '⚠ Venta prioritaria o procesamiento'
+            },
+            'fuera': {
+                status: 'Fuera del rango de venta',
+                class: 'status-fuera',
+                analysis: 'Este producto ha superado el tiempo óptimo de venta. No es apto para comercialización directa. Se recomienda procesamiento inmediato, donación o compostaje.',
+                recommendation: '✗ No apto para venta - Procesar o donar'
+            }
+        };
+
+        // Función para obtener el estado del producto (simula recibir datos del formulario anterior)
+        function getProductState() {
+            // En producción, esto vendría de la página anterior mediante URL params o localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const state = urlParams.get('estado') || 'maduracion'; // Por defecto: maduración avanzada (amarillo)
+            const name = urlParams.get('nombre') || 'Manzana';
+            const date = urlParams.get('fecha') || '15/11/2025';
+            const emoji = urlParams.get('emoji') || '🍎';
+            
+            return { state, name, date, emoji };
+        }
+
+        // Renderizar el producto
+        function renderProduct() {
+            const { state, name, date, emoji } = getProductState();
+            const stateInfo = productStates[state];
+
+            document.getElementById('productEmoji').textContent = emoji;
+            document.getElementById('productName').textContent = name;
+            document.getElementById('productDate').textContent = `Fecha de compra: ${date}`;
+            
+            document.getElementById('statusContainer').innerHTML = `
+                <span class="status-badge ${stateInfo.class}">
+                    <span class="status-indicator"></span>
+                    ${stateInfo.status}
+                </span>
+            `;
+
+            document.getElementById('analysisText').textContent = stateInfo.analysis;
+            document.getElementById('recommendation').textContent = stateInfo.recommendation;
+        }
+
+        function processProduct() {
+            const { name, emoji } = getProductState();
+            // Redirigir a la página de tratamiento con los datos del producto
+            window.location.href = `tratar-producto.html?nombre=${encodeURIComponent(name)}&emoji=${emoji}`;
+        }
+
+        // Inicializar
+        renderProduct();
+    </script>
+</body>
+</html>

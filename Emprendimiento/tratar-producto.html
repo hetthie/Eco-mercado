@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Mercado - Guía de Tratamiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 15px;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+            border-radius: 30px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #4ade80;
+            border-radius: 10px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .leaf-icon {
+            width: 28px;
+            height: 28px;
+            background: #4ade80;
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(-45deg);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .title {
+            font-size: 26px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .product-header {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: #fbbf24;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .treatment-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 24px;
+        }
+
+        .treatment-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #4ade80;
+            transition: all 0.3s ease;
+        }
+
+        .treatment-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .treatment-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .treatment-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .treatment-description {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .treatment-ingredients {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ingredients-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .ingredients-list {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .treatment-steps {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .steps-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .step {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 6px;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        .step:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-card {
+            background: #dbeafe;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .tip-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tip-text {
+            font-size: 13px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+        }
+
+        .save-btn {
+            background: #4ade80;
+            color: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+        }
+
+        .save-btn:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 222, 128, 0.4);
+        }
+
+        .back-btn {
+            background: #94a3b8;
+            color: white;
+            box-shadow: 0 4px 12px rgba(148, 163, 184, 0.3);
+        }
+
+        .back-btn:hover {
+            background: #64748b;
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="leaf-icon"></div>
+            <div class="logo-text">ECO MERCADO</div>
+        </div>
+        
+        <h1 class="title">Guía de Tratamiento</h1>
+        <p class="subtitle">Dale una segunda vida a tus productos</p>
+        
+        <div class="product-header">
+            <div class="product-emoji" id="productEmoji">🍎</div>
+            <div class="product-name" id="productName">Manzana</div>
+            <span class="status-badge">
+                ⚠️ Maduración avanzada
+            </span>
+        </div>
+
+        <div class="treatment-section">
+            <h2 class="section-title">
+                <span class="section-icon">🥗</span>
+                Opciones de Transformación
+            </h2>
+
+            <div id="treatmentOptions">
+                <!-- Las opciones se generarán dinámicamente según el producto -->
+            </div>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-title">
+                💡 Consejo Eco
+            </div>
+            <p class="tip-text">
+                Transformar productos en maduración avanzada reduce el desperdicio de alimentos hasta en un 70%. ¡Cada acción cuenta para un planeta más sostenible!
+            </p>
+        </div>
+
+        <div class="button-container">
+            <button class="action-btn save-btn" onclick="saveGuide()">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                Guardar Guía
+            </button>
+            
+            <button class="action-btn back-btn" onclick="window.history.back()">
+                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                </svg>
+                Volver
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de tratamientos por tipo de producto
+        const treatmentDatabase = {
+            'manzana': [
+                {
+                    title: '🥧 Compota de Manzana',
+                    description: 'Una deliciosa compota perfecta para acompañar postres o desayunos.',
+                    ingredients: ['4 manzanas', '2 cucharadas de azúcar', '1 pizca de canela', 'Jugo de medio limón'],
+                    steps: [
+                        'Pelar y cortar las manzanas en cubos',
+                        'Cocinar a fuego medio con azúcar y canela por 15 minutos',
+                        'Añadir el jugo de limón y triturar',
+                        'Dejar enfriar y refrigerar'
+                    ],
+                    time: '20 min'
+                },
+                {
+                    title: '🧃 Jugo Natural',
+                    description: 'Aprovecha las vitaminas en un refrescante jugo casero.',
+                    ingredients: ['3 manzanas', '1 taza de agua', 'Hielo al gusto', 'Miel opcional'],
+                    steps: [
+                        'Lavar y cortar las manzanas (sin pelar)',
+                        'Licuar con agua hasta obtener consistencia suave',
+                        'Colar para remover la pulpa',
+                        'Servir con hielo y endulzar al gusto'
+                    ],
+                    time: '10 min'
+                },
+                {
+                    title: '🍪 Chips de Manzana',
+                    description: 'Snack saludable y crujiente horneado sin aceite.',
+                    ingredients: ['2 manzanas', 'Canela en polvo', 'Papel mantequilla'],
+                    steps: [
+                        'Cortar manzanas en rodajas muy finas',
+                        'Colocar en bandeja con papel mantequilla',
+                        'Espolvorear canela',
+                        'Hornear a 100°C por 2 horas hasta que estén crujientes'
+                    ],
+                    time: '2h 10min'
+                }
+            ],
+            'plátano': [
+                {
+                    title: '🍞 Pan de Plátano',
+                    description: 'Un clásico pan casero húmedo y delicioso.',
+                    ingredients: ['3 plátanos maduros', '2 tazas de harina', '1 huevo', '½ taza de azúcar', '¼ taza de aceite'],
+                    steps: [
+                        'Triturar los plátanos hasta obtener puré',
+                        'Mezclar con huevo, azúcar y aceite',
+                        'Incorporar la harina gradualmente',
+                        'Hornear a 180°C por 45 minutos'
+                    ],
+                    time: '60 min'
+                },
+                {
+                    title: '🍦 Nice Cream (Helado Vegano)',
+                    description: 'Helado saludable sin lácteos ni azúcar añadida.',
+                    ingredients: ['4 plátanos maduros congelados', 'Esencia de vainilla', 'Cacao en polvo opcional'],
+                    steps: [
+                        'Cortar plátanos en rodajas y congelar 4 horas',
+                        'Procesar en licuadora hasta cremoso',
+                        'Añadir vainilla o cacao al gusto',
+                        'Servir inmediatamente o recongelar'
+                    ],
+                    time: '5 min'
+                },
+                {
+                    title: '🥤 Batido Energético',
+                    description: 'Perfecto para el desayuno o post-entrenamiento.',
+                    ingredients: ['2 plátanos', '1 taza de leche', '1 cucharada de avena', 'Miel al gusto'],
+                    steps: [
+                        'Pelar los plátanos',
+                        'Licuar todos los ingredientes',
+                        'Agregar hielo si se desea más frío',
+                        'Servir inmediatamente'
+                    ],
+                    time: '5 min'
+                }
+            ],
+            'default': [
+                {
+                    title: '🥗 Ensalada Mixta',
+                    description: 'Aprovecha tus productos en una ensalada fresca y nutritiva.',
+                    ingredients: ['Producto principal', 'Vegetales frescos', 'Aceite de oliva', 'Limón y sal'],
+                    steps: [
+                        'Lavar y cortar el producto en trozos',
+                        'Mezclar con otros vegetales disponibles',
+                        'Aliñar con aceite, limón y sal',
+                        'Servir fresco'
+                    ],
+                    time: '10 min'
+                },
+                {
+                    title: '🍲 Sopa o Crema',
+                    description: 'Transforma productos maduros en una sopa cremosa.',
+                    ingredients: ['Producto principal', 'Caldo de verduras', 'Cebolla', 'Especias al gusto'],
+                    steps: [
+                        'Picar el producto y la cebolla',
+                        'Cocinar en caldo hasta que estén blandos',
+                        'Licuar hasta obtener consistencia cremosa',
+                        'Condimentar y servir caliente'
+                    ],
+                    time: '30 min'
+                },
+                {
+                    title: '🧃 Batido o Jugo',
+                    description: 'Extrae todos los nutrientes en una bebida refrescante.',
+                    ingredients: ['Producto principal', 'Agua o leche', 'Endulzante natural', 'Hielo'],
+                    steps: [
+                        'Lavar y preparar el producto',
+                        'Licuar con líquido de preferencia',
+                        'Colar si es necesario',
+                        'Servir con hielo'
+                    ],
+                    time: '5 min'
+                }
+            ]
+        };
+
+        function getProductInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('nombre') || 'Producto';
+            const emoji = urlParams.get('emoji') || '🍎';
+            
+            return { name, emoji };
+        }
+
+        function renderTreatments() {
+            const { name, emoji } = getProductInfo();
+            
+            document.getElementById('productEmoji').textContent = emoji;
+            document.getElementById('productName').textContent = name;
+            
+            // Buscar tratamientos específicos o usar los por defecto
+            const productKey = name.toLowerCase();
+            const treatments = treatmentDatabase[productKey] || treatmentDatabase['default'];
+            
+            const container = document.getElementById('treatmentOptions');
+            container.innerHTML = '';
+            
+            treatments.forEach(treatment => {
+                const card = document.createElement('div');
+                card.className = 'treatment-card';
+                
+                card.innerHTML = `
+                    <div class="treatment-title">${treatment.title}</div>
+                    <div class="treatment-description">${treatment.description}</div>
+                    
+                    <div class="treatment-ingredients">
+                        <div class="ingredients-title">Ingredientes</div>
+                        <div class="ingredients-list">
+                            ${treatment.ingredients.map(ing => `• ${ing}`).join('<br>')}
+                        </div>
+                    </div>
+                    
+                    <div class="treatment-steps">
+                        <div class="steps-title">Preparación</div>
+                        ${treatment.steps.map(step => `<div class="step">${step}</div>`).join('')}
+                    </div>
+                    
+                    <div class="time-badge">
+                        ⏱️ Tiempo: ${treatment.time}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function saveGuide() {
+            const { name } = getProductInfo();
+            alert(`¡Guía guardada!\n\nLas recetas para "${name}" han sido guardadas en tu biblioteca de tratamientos.\n\nPodrás consultarlas en cualquier momento desde la sección "Mis Guías".`);
+        }
+
+        renderTreatments();
+    </script>
+</body>
+</html>
