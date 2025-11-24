@@ -196,7 +196,6 @@
             height: 20px;
         }
 
-        /* Estados específicos para demostración */
         .info-card {
             background: #f1f5f9;
             border-radius: 12px;
@@ -230,6 +229,13 @@
             font-weight: 600;
             margin-top: 10px;
         }
+
+        .days-info {
+            font-size: 15px;
+            color: #475569;
+            font-weight: 600;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -245,6 +251,7 @@
             <span class="product-emoji" id="productEmoji">🍎</span>
             <div class="product-name" id="productName">Manzana</div>
             <div class="product-date" id="productDate">Fecha de compra: 15/11/2025</div>
+            <div class="days-info" id="daysInfo">Días desde la compra: 0</div>
             
             <div id="statusContainer">
                 <!-- El estado se inyectará aquí dinámicamente -->
@@ -278,7 +285,6 @@
     </div>
 
     <script>
-        // Datos de ejemplo de productos con sus estados
         const productStates = {
             'aptos': {
                 status: 'Aptos para la venta',
@@ -300,26 +306,49 @@
             }
         };
 
-        // Función para obtener el estado del producto (simula recibir datos del formulario anterior)
+        function calculateDaysSincePurchase(dateStr) {
+            const [day, month, year] = dateStr.split('/').map(num => parseInt(num));
+            const purchaseDate = new Date(year, month - 1, day);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            purchaseDate.setHours(0, 0, 0, 0);
+            
+            const diffTime = today - purchaseDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            return diffDays;
+        }
+
+        function getStateByDays(days) {
+            if (days <= 4) {
+                return 'aptos';
+            } else if (days <= 10) {
+                return 'maduracion';
+            } else {
+                return 'fuera';
+            }
+        }
+
         function getProductState() {
-            // En producción, esto vendría de la página anterior mediante URL params o localStorage
             const urlParams = new URLSearchParams(window.location.search);
-            const state = urlParams.get('estado') || 'maduracion'; // Por defecto: maduración avanzada (amarillo)
             const name = urlParams.get('nombre') || 'Manzana';
             const date = urlParams.get('fecha') || '15/11/2025';
             const emoji = urlParams.get('emoji') || '🍎';
             
-            return { state, name, date, emoji };
+            const daysSincePurchase = calculateDaysSincePurchase(date);
+            const state = getStateByDays(daysSincePurchase);
+            
+            return { state, name, date, emoji, daysSincePurchase };
         }
 
-        // Renderizar el producto
         function renderProduct() {
-            const { state, name, date, emoji } = getProductState();
+            const { state, name, date, emoji, daysSincePurchase } = getProductState();
             const stateInfo = productStates[state];
 
             document.getElementById('productEmoji').textContent = emoji;
             document.getElementById('productName').textContent = name;
             document.getElementById('productDate').textContent = `Fecha de compra: ${date}`;
+            document.getElementById('daysInfo').textContent = `Días desde la compra: ${daysSincePurchase}`;
             
             document.getElementById('statusContainer').innerHTML = `
                 <span class="status-badge ${stateInfo.class}">
@@ -334,11 +363,9 @@
 
         function processProduct() {
             const { name, emoji } = getProductState();
-            // Redirigir a la página de tratamiento con los datos del producto
             window.location.href = `tratar-producto.html?nombre=${encodeURIComponent(name)}&emoji=${emoji}`;
         }
 
-        // Inicializar
         renderProduct();
     </script>
 </body>
