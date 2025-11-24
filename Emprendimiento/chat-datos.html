@@ -474,33 +474,33 @@
         function calculateState() {
             let score = 0;
             
-            // Análisis por días (peso: 40%)
-            if (userResponses.dias <= 4) score += 40;
-            else if (userResponses.dias <= 10) score += 20;
+            // Análisis por días (peso: 10% - menor importancia)
+            if (userResponses.dias <= 4) score += 10;
+            else if (userResponses.dias <= 10) score += 5;
             else score += 0;
             
-            // Análisis por color (peso: 15%)
-            if (userResponses.color === 'Verde intenso') score += 15;
-            else if (userResponses.color === 'Verde amarillento') score += 10;
-            else if (userResponses.color === 'Amarillo/marrón') score += 5;
+            // Análisis por color (peso: 25% - mayor importancia)
+            if (userResponses.color === 'Verde intenso') score += 25;
+            else if (userResponses.color === 'Verde amarillento') score += 15;
+            else if (userResponses.color === 'Amarillo/marrón') score += 8;
             else score += 0;
             
-            // Análisis por textura (peso: 20%)
-            if (userResponses.textura === 'Firme y crujiente') score += 20;
-            else if (userResponses.textura === 'Suave pero firme') score += 12;
-            else if (userResponses.textura === 'Blando') score += 5;
+            // Análisis por textura (peso: 30% - mayor importancia)
+            if (userResponses.textura === 'Firme y crujiente') score += 30;
+            else if (userResponses.textura === 'Suave pero firme') score += 18;
+            else if (userResponses.textura === 'Blando') score += 8;
             else score += 0;
             
-            // Análisis por olor (peso: 15%)
-            if (userResponses.olor === 'Fresco y natural') score += 15;
-            else if (userResponses.olor === 'Ligero olor a maduración') score += 8;
-            else if (userResponses.olor === 'Olor fuerte/fermentado') score += 3;
+            // Análisis por olor (peso: 20%)
+            if (userResponses.olor === 'Fresco y natural') score += 20;
+            else if (userResponses.olor === 'Ligero olor a maduración') score += 10;
+            else if (userResponses.olor === 'Olor fuerte/fermentado') score += 4;
             else score += 0;
             
-            // Análisis por manchas (peso: 10%)
-            if (userResponses.manchas === 'No presenta manchas') score += 10;
-            else if (userResponses.manchas === 'Pocas manchas pequeñas') score += 6;
-            else if (userResponses.manchas === 'Varias manchas o golpes') score += 2;
+            // Análisis por manchas (peso: 15%)
+            if (userResponses.manchas === 'No presenta manchas') score += 15;
+            else if (userResponses.manchas === 'Pocas manchas pequeñas') score += 9;
+            else if (userResponses.manchas === 'Varias manchas o golpes') score += 3;
             else score += 0;
             
             if (score >= 70) return 'aptos';
