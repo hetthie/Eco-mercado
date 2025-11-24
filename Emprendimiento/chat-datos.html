@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco Mercado - Chat de Análisis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, #e8e8e8 0%, #d0d0d0 100%);
+            border-radius: 30px;
+            padding: 30px 20px 20px;
+            width: 100%;
+            max-width: 420px;
+            height: 650px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-emoji {
+            font-size: 32px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: #64748b;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .bot .message-avatar {
+            background: #4ade80;
+        }
+
+        .user .message-avatar {
+            background: #3b82f6;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .bot .message-bubble {
+            background: #f1f5f9;
+            color: #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user .message-bubble {
+            background: #3b82f6;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 24px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background: #4ade80;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #22c55e;
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <span class="product-emoji" id="productEmoji">🍎</span>
+                <div class="product-info">
+                    <div class="product-name" id="productName">Manzana</div>
+                    <div class="status-text">● Analizando...</div>
+                </div>
+            </div>
+            <button class="close-btn" onclick="window.location.href='datos.html'">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <!-- Los mensajes se agregarán dinámicamente aquí -->
+        </div>
+
+        <div class="input-container">
+            <input type="text" class="message-input" id="messageInput" placeholder="Escribe tu respuesta..." disabled>
+            <button class="send-btn" id="sendBtn" disabled>
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let productName = '';
+        let emoji = '';
+        let currentStep = 0;
+        let userResponses = {
+            color: '',
+            textura: '',
+            olor: '',
+            manchas: '',
+            dias: 0
+        };
+
+        const questions = [
+            {
+                text: '¡Hola! Voy a ayudarte a analizar el estado de tu producto. Empecemos con algunas preguntas.',
+                type: 'info'
+            },
+            {
+                text: '¿Cuántos días tiene el producto desde que lo compraste?',
+                type: 'input',
+                field: 'dias'
+            },
+            {
+                text: '¿Qué color predominante tiene el producto?',
+                type: 'options',
+                field: 'color',
+                options: ['Verde intenso', 'Verde amarillento', 'Amarillo/marrón', 'Marrón oscuro']
+            },
+            {
+                text: '¿Cómo está la textura del producto?',
+                type: 'options',
+                field: 'textura',
+                options: ['Firme y crujiente', 'Suave pero firme', 'Blando', 'Muy blando/arrugado']
+            },
+            {
+                text: '¿Cómo es el olor del producto?',
+                type: 'options',
+                field: 'olor',
+                options: ['Fresco y natural', 'Ligero olor a maduración', 'Olor fuerte/fermentado', 'Olor desagradable']
+            },
+            {
+                text: '¿Presenta manchas o golpes visibles?',
+                type: 'options',
+                field: 'manchas',
+                options: ['No presenta manchas', 'Pocas manchas pequeñas', 'Varias manchas o golpes', 'Muchas manchas/moho']
+            }
+        ];
+
+        function getURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            productName = urlParams.get('nombre') || 'Producto';
+            emoji = urlParams.get('emoji') || '🍎';
+            
+            document.getElementById('productName').textContent = productName;
+            document.getElementById('productEmoji').textContent = emoji;
+        }
+
+        function addMessage(text, isBot = true, showOptions = null) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isBot ? 'bot' : 'user'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isBot ? '🤖' : '👤'}</div>
+                <div class="message-bubble">${text}</div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            
+            if (showOptions && showOptions.length > 0) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options-container';
+                
+                showOptions.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = option;
+                    btn.onclick = () => selectOption(option);
+                    optionsDiv.appendChild(btn);
+                });
+                
+                chatContainer.appendChild(optionsDiv);
+            }
+            
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-bubble typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function askQuestion() {
+            if (currentStep >= questions.length) {
+                analyzeProduct();
+                return;
+            }
+
+            const question = questions[currentStep];
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                
+                if (question.type === 'options') {
+                    addMessage(question.text, true, question.options);
+                } else if (question.type === 'input') {
+                    addMessage(question.text, true);
+                    enableInput();
+                } else {
+                    addMessage(question.text, true);
+                    currentStep++;
+                    setTimeout(askQuestion, 1000);
+                }
+            }, 1500);
+        }
+
+        function selectOption(option) {
+            const question = questions[currentStep];
+            userResponses[question.field] = option;
+            
+            addMessage(option, false);
+            
+            const optionsContainer = document.querySelectorAll('.options-container');
+            optionsContainer.forEach(container => container.remove());
+            
+            currentStep++;
+            setTimeout(askQuestion, 800);
+        }
+
+        function enableInput() {
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            input.disabled = false;
+            sendBtn.disabled = false;
+            input.focus();
+        }
+
+        function disableInput() {
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            input.disabled = true;
+            sendBtn.disabled = true;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            const question = questions[currentStep];
+            const days = parseInt(message);
+            
+            if (isNaN(days) || days < 0) {
+                alert('Por favor ingresa un número válido de días');
+                return;
+            }
+            
+            userResponses[question.field] = days;
+            addMessage(message, false);
+            input.value = '';
+            disableInput();
+            
+            currentStep++;
+            setTimeout(askQuestion, 800);
+        }
+
+        function calculateState() {
+            let score = 0;
+            
+            // Análisis por días (peso: 40%)
+            if (userResponses.dias <= 4) score += 40;
+            else if (userResponses.dias <= 10) score += 20;
+            else score += 0;
+            
+            // Análisis por color (peso: 15%)
+            if (userResponses.color === 'Verde intenso') score += 15;
+            else if (userResponses.color === 'Verde amarillento') score += 10;
+            else if (userResponses.color === 'Amarillo/marrón') score += 5;
+            else score += 0;
+            
+            // Análisis por textura (peso: 20%)
+            if (userResponses.textura === 'Firme y crujiente') score += 20;
+            else if (userResponses.textura === 'Suave pero firme') score += 12;
+            else if (userResponses.textura === 'Blando') score += 5;
+            else score += 0;
+            
+            // Análisis por olor (peso: 15%)
+            if (userResponses.olor === 'Fresco y natural') score += 15;
+            else if (userResponses.olor === 'Ligero olor a maduración') score += 8;
+            else if (userResponses.olor === 'Olor fuerte/fermentado') score += 3;
+            else score += 0;
+            
+            // Análisis por manchas (peso: 10%)
+            if (userResponses.manchas === 'No presenta manchas') score += 10;
+            else if (userResponses.manchas === 'Pocas manchas pequeñas') score += 6;
+            else if (userResponses.manchas === 'Varias manchas o golpes') score += 2;
+            else score += 0;
+            
+            if (score >= 70) return 'aptos';
+            else if (score >= 40) return 'maduracion';
+            else return 'fuera';
+        }
+
+        function analyzeProduct() {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                removeTypingIndicator();
+                addMessage('¡Perfecto! He analizado toda la información. Estoy procesando los datos...', true);
+                
+                setTimeout(() => {
+                    showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const estado = calculateState();
+                        const today = new Date();
+                        const fecha = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+                        
+                        addMessage('Análisis completado. Te mostraré el resultado detallado del estado de tu producto.', true);
+                        
+                        setTimeout(() => {
+                            window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(fecha)}&estado=${estado}&emoji=${encodeURIComponent(emoji)}`;
+                        }, 2000);
+                    }, 2000);
+                }, 1500);
+            }, 1000);
+        }
+
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        getURLParams();
+        setTimeout(askQuestion, 500);
+    </script>
+</body>
+</html>
