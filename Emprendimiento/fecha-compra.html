@@ -346,7 +346,18 @@
             <form id="purchaseForm">
                 <div class="input-group">
                     <label class="input-label" for="productName">Nombre del Producto</label>
-                    <input type="text" id="productName" class="input-field" placeholder="Ej: Manzanas orgánicas" required>
+                    <select id="productName" class="input-field" required>
+                        <option value="">Selecciona un producto...</option>
+                        <option value="Manzana|🍎">🍎 Manzana</option>
+                        <option value="Plátano|🍌">🍌 Plátano</option>
+                        <option value="Tomate|🍅">🍅 Tomate</option>
+                        <option value="Zanahoria|🥕">🥕 Zanahoria</option>
+                        <option value="Lechuga|🥬">🥬 Lechuga</option>
+                        <option value="Aguacate|🥑">🥑 Aguacate</option>
+                        <option value="Fresa|🍓">🍓 Fresa</option>
+                        <option value="Brócoli|🥦">🥦 Brócoli</option>
+                        <option value="Naranja|🍊">🍊 Naranja</option>
+                    </select>
                 </div>
                 
                 <div class="input-group">
@@ -436,15 +447,19 @@
 
         document.getElementById('purchaseForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const productName = document.getElementById('productName').value;
+            const productSelect = document.getElementById('productName').value;
             const purchaseDate = document.getElementById('purchaseDate').value;
             
-            const emojis = ['🍎', '🍌', '🍊', '🥕', '🥬', '🍅', '🥔', '🥒', '🍇', '🥑', '🍓', '🌽', '🍋', '🫑', '🍉', '🥦'];
+            if (!productSelect) {
+                alert('Por favor selecciona un producto');
+                return;
+            }
+            
+            const [productName, emoji] = productSelect.split('|');
             
             const estadoAleatorio = 'maduracion';
-            const emojiAleatorio = emojis[Math.floor(Math.random() * emojis.length)];
             
-            window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(purchaseDate)}&estado=${estadoAleatorio}&emoji=${emojiAleatorio}`;
+            window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(purchaseDate)}&estado=${estadoAleatorio}&emoji=${encodeURIComponent(emoji)}`;
         });
 
         renderCalendar();
