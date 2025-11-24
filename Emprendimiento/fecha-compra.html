@@ -164,7 +164,7 @@
             border: none;
         }
 
-        .day:hover:not(.empty) {
+        .day:hover:not(.empty):not(.disabled) {
             background: #f3f4f6;
         }
 
@@ -179,6 +179,15 @@
 
         .day.empty {
             cursor: default;
+        }
+
+        .day.disabled {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .day.disabled:hover {
+            background: transparent;
         }
 
         .nav-buttons {
@@ -306,13 +315,13 @@
             </div>
             
             <div class="weekdays">
+                <div class="weekday">L</div>
                 <div class="weekday">M</div>
-                <div class="weekday">T</div>
-                <div class="weekday">W</div>
-                <div class="weekday">T</div>
-                <div class="weekday">F</div>
+                <div class="weekday">M</div>
+                <div class="weekday">J</div>
+                <div class="weekday">V</div>
                 <div class="weekday">S</div>
-                <div class="weekday">S</div>
+                <div class="weekday">D</div>
             </div>
             
             <div class="days" id="calendarDays">
@@ -351,8 +360,9 @@
     </div>
 
     <script>
-        let currentMonth = 10; // Noviembre (0-indexed)
-        let currentYear = 2025;
+        const today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
         let selectedDate = null;
 
         const months = [
@@ -380,7 +390,6 @@
                 calendarDays.appendChild(emptyDay);
             }
             
-            const today = new Date();
             const isCurrentMonth = currentMonth === today.getMonth() && currentYear === today.getFullYear();
             
             for (let day = 1; day <= daysInMonth; day++) {
@@ -388,20 +397,24 @@
                 dayBtn.className = 'day';
                 dayBtn.textContent = day;
                 
-                if (isCurrentMonth && day === today.getDate()) {
-                    dayBtn.classList.add('today');
-                }
+                const dayDate = new Date(currentYear, currentMonth, day);
+                const isFutureDate = dayDate > today;
                 
-                if (day === 15 && currentMonth === 10 && currentYear === 2025) {
-                    dayBtn.classList.add('selected');
+                if (isFutureDate) {
+                    dayBtn.classList.add('disabled');
+                    dayBtn.disabled = true;
+                } else {
+                    if (isCurrentMonth && day === today.getDate()) {
+                        dayBtn.classList.add('today');
+                    }
+                    
+                    dayBtn.addEventListener('click', function() {
+                        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedDate = `${day}/${currentMonth + 1}/${currentYear}`;
+                        document.getElementById('purchaseDate').value = selectedDate;
+                    });
                 }
-                
-                dayBtn.addEventListener('click', function() {
-                    document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedDate = `${day}/${currentMonth + 1}/${currentYear}`;
-                    document.getElementById('purchaseDate').value = selectedDate;
-                });
                 
                 calendarDays.appendChild(dayBtn);
             }
@@ -426,14 +439,11 @@
             const productName = document.getElementById('productName').value;
             const purchaseDate = document.getElementById('purchaseDate').value;
             
-            // Simular análisis del producto y determinar estado
             const emojis = ['🍎', '🍌', '🍊', '🥕', '🥬', '🍅', '🥔', '🥒', '🍇', '🥑', '🍓', '🌽', '🍋', '🫑', '🍉', '🥦'];
             
-            // Estado fijo en "maduración avanzada" (amarillo)
             const estadoAleatorio = 'maduracion';
             const emojiAleatorio = emojis[Math.floor(Math.random() * emojis.length)];
             
-            // Redirigir a la página de estado con parámetros
             window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(purchaseDate)}&estado=${estadoAleatorio}&emoji=${emojiAleatorio}`;
         });
 
