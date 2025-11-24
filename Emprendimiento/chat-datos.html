@@ -471,41 +471,48 @@
             setTimeout(askQuestion, 800);
         }
 
-        function calculateState() {
+        function calculateEstimatedDays() {
             let score = 0;
             
-            // Análisis por días (peso: 10% - menor importancia)
-            if (userResponses.dias <= 4) score += 10;
-            else if (userResponses.dias <= 10) score += 5;
-            else score += 0;
-            
-            // Análisis por color (peso: 25% - mayor importancia)
+            // Análisis por color (peso: 25%)
             if (userResponses.color === 'Verde intenso') score += 25;
             else if (userResponses.color === 'Verde amarillento') score += 15;
             else if (userResponses.color === 'Amarillo/marrón') score += 8;
             else score += 0;
             
-            // Análisis por textura (peso: 30% - mayor importancia)
+            // Análisis por textura (peso: 30%)
             if (userResponses.textura === 'Firme y crujiente') score += 30;
             else if (userResponses.textura === 'Suave pero firme') score += 18;
             else if (userResponses.textura === 'Blando') score += 8;
             else score += 0;
             
-            // Análisis por olor (peso: 20%)
-            if (userResponses.olor === 'Fresco y natural') score += 20;
-            else if (userResponses.olor === 'Ligero olor a maduración') score += 10;
-            else if (userResponses.olor === 'Olor fuerte/fermentado') score += 4;
+            // Análisis por olor (peso: 25%)
+            if (userResponses.olor === 'Fresco y natural') score += 25;
+            else if (userResponses.olor === 'Ligero olor a maduración') score += 12;
+            else if (userResponses.olor === 'Olor fuerte/fermentado') score += 5;
             else score += 0;
             
-            // Análisis por manchas (peso: 15%)
-            if (userResponses.manchas === 'No presenta manchas') score += 15;
-            else if (userResponses.manchas === 'Pocas manchas pequeñas') score += 9;
-            else if (userResponses.manchas === 'Varias manchas o golpes') score += 3;
+            // Análisis por manchas (peso: 20%)
+            if (userResponses.manchas === 'No presenta manchas') score += 20;
+            else if (userResponses.manchas === 'Pocas manchas pequeñas') score += 10;
+            else if (userResponses.manchas === 'Varias manchas o golpes') score += 4;
             else score += 0;
             
-            if (score >= 70) return 'aptos';
-            else if (score >= 40) return 'maduracion';
-            else return 'fuera';
+            // Convertir puntuación a días estimados
+            // 100-80 puntos = 1-4 días (verde)
+            // 79-50 puntos = 5-10 días (amarillo)
+            // 49-0 puntos = 11-20 días (rojo)
+            
+            let estimatedDays;
+            if (score >= 80) {
+                estimatedDays = Math.floor(1 + (100 - score) / 5); // 1-4 días
+            } else if (score >= 50) {
+                estimatedDays = Math.floor(5 + (80 - score) / 5); // 5-10 días
+            } else {
+                estimatedDays = Math.floor(11 + (50 - score) / 5); // 11-20 días
+            }
+            
+            return Math.min(estimatedDays, 20); // Máximo 20 días
         }
 
         function analyzeProduct() {
@@ -520,14 +527,16 @@
                     
                     setTimeout(() => {
                         removeTypingIndicator();
-                        const estado = calculateState();
+                        const estimatedDays = calculateEstimatedDays();
                         const today = new Date();
-                        const fecha = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+                        const purchaseDate = new Date(today);
+                        purchaseDate.setDate(today.getDate() - estimatedDays);
+                        const fecha = `${purchaseDate.getDate()}/${purchaseDate.getMonth() + 1}/${purchaseDate.getFullYear()}`;
                         
                         addMessage('Análisis completado. Te mostraré el resultado detallado del estado de tu producto.', true);
                         
                         setTimeout(() => {
-                            window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(fecha)}&estado=${estado}&emoji=${encodeURIComponent(emoji)}`;
+                            window.location.href = `estado-producto.html?nombre=${encodeURIComponent(productName)}&fecha=${encodeURIComponent(fecha)}&emoji=${encodeURIComponent(emoji)}`;
                         }, 2000);
                     }, 2000);
                 }, 1500);
